@@ -13,6 +13,7 @@ resource "aws_vpc" "terraformVpc" {
     }
 }
 
+#variable for availability zones
 variable "azs" {
     type = list(string)
     description = "Availability zones"
