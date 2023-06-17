@@ -55,7 +55,7 @@ resource "aws_route_table" "publicRouteTable" {
     route {
         cidr_block = "0.0.0.0/0"
         gateway_id = "${aws_internet_gateway.terraformVpcGateway.id}"
-        #attributes     
+             
         }
 
       route {
@@ -84,7 +84,7 @@ resource "aws_security_group" "tfVpcSecurityGroup" {
 
     ingress = [
     {
-        description = "SSH"
+        description = "Allowing SSH for incoming traffic"
         from_port = 22
         to_port = 22
         protocol = "tcp"
@@ -113,7 +113,7 @@ resource "aws_security_group" "tfVpcSecurityGroup" {
     }
 }
 
-#EC2
+#create EC2 in public subnet
 resource "aws_instance" "ec2InPublic" {
   ami = "ami-022e1a32d3f742bd8"
   key_name = aws_key_pair.key_tf.key_name
@@ -124,7 +124,7 @@ resource "aws_instance" "ec2InPublic" {
 
 }
 
-#Return EC2 IP
+#Return EC2 public IP
 output "ec2_public_ip" {
     value = aws_instance.ec2InPublic.public_ip
 } 
