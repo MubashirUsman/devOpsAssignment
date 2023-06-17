@@ -1,3 +1,4 @@
+#base OS
 FROM ubuntu
 
 #Update and install nginx 
