@@ -48,7 +48,7 @@ resource "aws_internet_gateway" "terraformVpcGateway" {
     }
 }
 
-#Route tables for public
+#Route tables for public subnet
 resource "aws_route_table" "publicRouteTable" {
     vpc_id = "${aws_vpc.terraformVpc.id}"
 
