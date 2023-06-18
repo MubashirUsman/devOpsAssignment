@@ -49,6 +49,23 @@ resource "aws_internet_gateway" "terraformVpcGateway" {
     }
 }
 
+#Elastic IP for nat gateway
+resource "aws_eip" "forNat" {
+  depends_on = [ aws_internet_gateway.terraformVpcGateway ]
+
+}
+
+#nat gateway
+resource "aws_nat_gateway" "natGateway" {
+  allocation_id = aws_eip.forNat.id
+  subnet_id = aws_subnet.publicSubnet.id #public subnet in which nat gateway is present
+
+  tags = {
+    Name = "natGateway"
+  }
+
+}
+
 #Route tables for public subnet
 resource "aws_route_table" "publicRouteTable" {
     vpc_id = "${aws_vpc.terraformVpc.id}"
@@ -70,10 +87,38 @@ resource "aws_route_table" "publicRouteTable" {
     }
 }
 
-#Route table association
+#Route table for private subnet
+resource "aws_route_table" "privateRouteTable" {
+    vpc_id = "${aws_vpc.terraformVpc.id}"
+
+    route {
+        cidr_block = "0.0.0.0/0"
+        nat_gateway_id = "${aws_nat_gateway.natGateway.id}"
+             
+        }
+
+      #route {
+      #  ipv6_cidr_block = "::/0"
+      #  nat_gateway_id = "${aws_nat_gateway.natGateway.id}"
+
+      #}
+
+    tags = {
+      Name = "privateRoutetable"
+    }
+}
+
+#Route table association for public subnet
 resource "aws_route_table_association" "rtAssociationPublic" {
     subnet_id = aws_subnet.publicSubnet.id
     route_table_id = aws_route_table.publicRouteTable.id
+
+}
+
+#Route table association for private subnet
+resource "aws_route_table_association" "rtAssociationPrivate" {
+    subnet_id = aws_subnet.privateSubnet.id
+    route_table_id = aws_route_table.privateRouteTable.id
 
 }
 
