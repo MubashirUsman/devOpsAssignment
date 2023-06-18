@@ -97,12 +97,6 @@ resource "aws_route_table" "privateRouteTable" {
              
         }
 
-      #route {
-      #  ipv6_cidr_block = "::/0"
-      #  nat_gateway_id = "${aws_nat_gateway.natGateway.id}"
-
-      #}
-
     tags = {
       Name = "privateRoutetable"
     }
